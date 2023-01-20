@@ -1,22 +1,62 @@
 import { useState } from "react";
+import useFormulario from "./hooks/useFormulario";
+import Input from './components/Input';
+import Card from './components/Card';
+import Container from './components/Container';
+import Button from './components/Button';
 
 function App() {
-  const [ formulario, setFormulario ] = useState({name: ''})
-  const handleChange = (e) => {
-    setFormulario({
-      ...formulario,
-      [e.target.name]: e.target.value,
-    })
+  const [usuarios, setUsuarios] = useState([])
+  const [formulario, handleChange, reset] = useFormulario({
+    name: '',
+    lastName: '',
+    email: '',
+  })
+
+  const submit = (e) => {
+    e.preventDefault()
+    setUsuarios([
+    ...usuarios,
+    formulario,
+  ])
+  reset()
   }
+  console.log(formulario, usuarios)
   return (
-    <form>
-      <input
-        name="name"
-        placeholder="Nombre"
-        value={formulario.name}
-        onChange={handleChange}
-      />
-    </form>
+    <Container>
+      <Card>
+        <div style={{ padding: 20}}>
+          <form onSubmit={submit}>
+            <Input
+              label="Nombre"
+              name="name"
+              value={formulario.name}
+              onChange={handleChange}
+            />
+            <Input
+              label="Apellido"
+              name="lastName"
+              value={formulario.lastName}
+              onChange={handleChange}
+            />
+            <Input
+              label="Correo"
+              name="email"
+              value={formulario.email}
+              onChange={handleChange}
+            />
+            <Button>Enviar</Button>
+          </form>
+        </div>
+      </Card>
+      <Card>
+        <ul>
+          {usuarios.map(x =>
+          <li key={x.email}>{`${x.name} ${x.lastName}: ${x.email}`}</li>
+          )}
+        </ul>
+      </Card>
+    </Container>
   );
 }
 
